@@ -1,9 +1,9 @@
 <template>
-  <button @click="onClick">{{localLoading}}<slot/></button>
+  <button @click="onClick" :class="classes">{{localLoading}}<slot/></button>
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, computed } from 'vue'
 export default {
   name: 'MButton',
   inheritAttrs: false,
@@ -12,12 +12,17 @@ export default {
       localLoading: false
     })
 
+    state.classes = computed(() => {
+      return {
+        'is-loading': state.localLoading
+      }
+    })
+
     const onClick = async () => {
       if (state.localLoading) {
         return
       }
       state.localLoading = true
-      console.log('onclick')
       try {
         await Promise.all(emit('click'))
       } finally {
