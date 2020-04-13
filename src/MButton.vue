@@ -7,12 +7,10 @@ import { reactive, toRefs } from 'vue'
 export default {
   name: 'MButton',
   inheritAttrs: false,
-  setup (props, { emit, listeners }) {
+  setup (props, { emit }) {
     const state = reactive({
       localLoading: false
     })
-
-    console.log(listeners)
 
     const onClick = async () => {
       if (state.localLoading) {
@@ -21,8 +19,7 @@ export default {
       state.localLoading = true
       console.log('onclick')
       try {
-        const res = await Promise.all(emit('click'))
-        console.log(res)
+        await Promise.all(emit('click'))
       } finally {
         state.localLoading = false
       }
