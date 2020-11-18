@@ -1,5 +1,5 @@
 <template>
-  <button @click="onClick" :class="classes">{{localLoading}}<slot/></button>
+  <button @click="onSClick" :class="classes">{{localLoading}}<slot/></button>
 </template>
 
 <script>
@@ -7,6 +7,12 @@ import { reactive, toRefs, computed } from 'vue'
 export default {
   name: 'MButton',
   inheritAttrs: false,
+  props: {
+    onClick: {
+      type: Function,
+      default: () => () => {}
+    }
+  },
   setup (props, { emit }) {
     const state = reactive({
       localLoading: false
@@ -18,13 +24,13 @@ export default {
       }
     })
 
-    const onClick = async () => {
+    const onSClick = async () => {
       if (state.localLoading) {
         return
       }
       state.localLoading = true
       try {
-        await Promise.all(emit('click'))
+        await props.onClick()
       } finally {
         state.localLoading = false
       }
@@ -32,7 +38,7 @@ export default {
 
     return {
       ...toRefs(state),
-      onClick
+      onSClick
     }
   }
 }
